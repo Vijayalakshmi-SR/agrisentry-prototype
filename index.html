@@ -3,143 +3,145 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AgriSentry — Interactive Prototype</title>
+<title>AgriSentry — Interactive SIH Prototype</title>
 <style>
-:root{--green:#238b35;--ink:#18231a}
+:root{--green:#238b35;--ink:#18231a;--bg:#f2f5f2}
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5f3;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-header{height:58px;background:#fff;border-bottom:1px solid #dfe5df;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:10}
-.brand{font-weight:800;color:#287b31;font-size:20px;letter-spacing:.2px}
-.badge{font-size:12px;padding:6px 10px;border:1px solid #cfe5d2;border-radius:20px;color:#287b31;background:#f4fbf5}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg)}
+header{height:58px;background:#fff;border-bottom:1px solid #dfe5df;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:50}
+.brand{font-weight:800;color:#287b31;font-size:20px}
+.badge{font-size:12px;color:#287b31;background:#f4fbf5;border:1px solid #cfe5d2;border-radius:20px;padding:6px 10px}
 main{min-height:calc(100vh - 58px);display:flex;justify-content:center;padding:22px}
-.stage{width:min(100%,430px);display:flex;justify-content:center}
-.screen{display:none;position:relative;width:360px;max-width:100%;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 10px 35px rgba(0,0,0,.12)}
+.stage{width:min(100%,1200px);display:flex;justify-content:center}
+.screen{display:none;position:relative;background:#fff;overflow:hidden;border-radius:20px;box-shadow:0 10px 35px rgba(0,0,0,.12)}
 .screen.active{display:block}
-.screen img{display:block;width:100%;height:auto}
-.hotspot{position:absolute;border:0;background:transparent;cursor:pointer;border-radius:10px}
-.hotspot:hover{outline:2px solid rgba(35,139,53,.55);background:rgba(35,139,53,.08)}
-.officer{width:min(100%,1200px);border-radius:18px}
-.officer img{width:100%;height:auto}
-.get-started{left:6%;top:76%;width:88%;height:8%}
+.phone{width:360px;max-width:100%}
+.phone>img{display:block;width:100%;height:auto}
+.officer{width:min(100%,1200px)}
+.officer>img{display:block;width:100%;height:auto}
+.action{position:absolute;z-index:5;border:0;cursor:pointer;background:rgba(255,255,255,0);border-radius:12px;padding:0}
+.action:focus-visible,.action:hover{outline:3px solid rgba(35,139,53,.8);background:rgba(35,139,53,.08)}
+.action .hint{display:none}
+.action:hover .hint,.action:focus-visible .hint{display:block;position:absolute;left:50%;transform:translateX(-50%);top:-34px;background:#18231a;color:#fff;padding:5px 8px;border-radius:6px;font-size:11px;white-space:nowrap}
+.visible-action{background:#238b35;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.visible-action:hover,.visible-action:focus-visible{background:#1c762c;outline:3px solid #9bd7a4}
+.restart{position:fixed;left:12px;bottom:12px;z-index:60;border:1px solid #dfe5df;background:#fff;color:#287b31;font-weight:700;border-radius:9px;padding:8px 11px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+/* Exact action areas, expressed as percentages of each supplied screen. */
+.welcome-start{left:6%;top:76%;width:88%;height:8%}
 .dashboard-warning{left:5%;top:45%;width:90%;height:22%}
-.map-btn{left:25%;bottom:0;width:25%;height:15%}
-.scan-btn{left:50%;bottom:0;width:25%;height:15%}
-.home-btn{left:0;bottom:0;width:25%;height:15%}
-.profile-btn{left:75%;bottom:0;width:25%;height:15%}
-.analyze{left:5%;top:65%;width:90%;height:11%}
-.combined{left:4%;top:82%;width:92%;height:8%}
-.view-map{left:3%;top:68%;width:94%;height:14%}
-.map-details{left:46%;top:79%;width:50%;height:8%}
-.send-alert{left:6%;top:60%;width:88%;height:28%}
-.send-confirm{left:48%;top:72%;width:46%;height:11%}
-.alert-ok{left:12%;top:62%;width:76%;height:12%}
-/* Officer screenshot is 2048x864. The visible "Send Farmer Alert"
-   button occupies roughly x=1060..1450, y=495..565. */
-.officer-alert{left:51%;top:56%;width:20%;height:10%}
-.officer-action{left:33%;top:56%;width:21%;height:10%}
-.back-top{left:0;top:0;width:15%;height:10%}
-.legend{position:fixed;left:18px;bottom:18px;background:#fff;border:1px solid #dfe5df;border-radius:12px;padding:10px 12px;font-size:12px;box-shadow:0 5px 20px rgba(0,0,0,.08);z-index:20}
-.legend button{border:0;background:none;color:#287b31;font-weight:700;cursor:pointer}
-@media(max-width:700px){header{padding:0 12px}.badge{display:none}main{padding:10px}.screen{border-radius:16px}.legend{display:none}}
+.dashboard-map{left:25%;bottom:0;width:25%;height:15%}
+.dashboard-scan{left:50%;bottom:0;width:25%;height:15%}
+.nav-home{left:0;bottom:0;width:25%;height:15%}
+.nav-map{left:25%;bottom:0;width:25%;height:15%}
+.nav-scan{left:50%;bottom:0;width:25%;height:15%}
+.nav-profile{left:75%;bottom:0;width:25%;height:15%}
+.scan-analyze{left:5%;top:65%;width:90%;height:9%}
+.disease-combined{left:6%;top:83.25%;width:88%;height:6.2%}
+.combined-map{left:3%;top:68%;width:94%;height:12%}
+.risk-map-details{left:44%;top:79%;width:52%;height:9%}
+.officer-send{left:51.5%;top:56%;width:20%;height:12%}
+.sms-send{left:50%;top:67%;width:45%;height:10%}
+.sms-ok{left:10%;top:55%;width:80%;height:12%}
+.alert-send{left:5%;top:60%;width:90%;height:28%}
+.back{left:0;top:0;width:15%;height:10%}
+/* The disease-result supplied image has a blank green CTA; restore its visible label
+   without changing the underlying screenshot. */
+.disease-combined.visible-action{top:83.25%;height:6.2%;font-size:15px}
+@media(max-width:700px){
+ header{padding:0 12px}.badge{display:none}main{padding:8px}.screen{border-radius:14px}
+ .restart{display:none}
+}
 </style>
 </head>
 <body>
 <header>
-<div class="brand">🌾 AGRISENTRY</div>
-<div class="badge">Interactive Prototype • SIH Demo</div>
+  <div class="brand">🌾 AGRISENTRY</div>
+  <div class="badge">Interactive Prototype • SIH Demo</div>
 </header>
+
 <main><div class="stage">
 
-<section class="screen active" id="welcome">
-<img src="assets/welcome.png" alt="AgriSentry welcome screen">
-<button class="hotspot get-started" aria-label="Get started" onclick="show('dashboard')"></button>
+<section class="screen phone active" id="welcome">
+<img src="assets/welcome.png" alt="AgriSentry welcome">
+<button class="action welcome-start visible-action" onclick="show('dashboard')">Get Started →<span class="hint">Open dashboard</span></button>
 </section>
 
-<section class="screen" id="dashboard">
+<section class="screen phone" id="dashboard">
 <img src="assets/farmer-dashboard.png" alt="Farmer dashboard">
-<button class="hotspot dashboard-warning" aria-label="Open early warning" onclick="show('risk')"></button>
-<button class="hotspot map-btn" aria-label="Open risk map" onclick="show('map')"></button>
-<button class="hotspot scan-btn" aria-label="Open crop scan" onclick="show('scan')"></button>
+<button class="action dashboard-warning" onclick="show('risk')" aria-label="Open early risk prediction"><span class="hint">Open early risk prediction</span></button>
+<button class="action dashboard-map" onclick="show('map')" aria-label="Open crop risk map"><span class="hint">Open risk map</span></button>
+<button class="action dashboard-scan" onclick="show('scan')" aria-label="Open crop scan"><span class="hint">Open crop scan</span></button>
 </section>
 
-<section class="screen" id="scan">
+<section class="screen phone" id="scan">
 <img src="assets/image-scan.png" alt="Crop image analysis">
-<button class="hotspot analyze" aria-label="Analyze image" onclick="show('disease')"></button>
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
-<button class="hotspot map-btn" onclick="show('map')"></button>
+<button class="action scan-analyze visible-action" onclick="show('disease')">🔍 Analyze Image<span class="hint">Analyze crop image</span></button>
 </section>
 
-<section class="screen" id="disease">
-<img src="assets/disease-result.png" alt="Disease analysis result">
-<button class="hotspot combined" aria-label="View combined risk" onclick="show('combined')"></button>
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
-<button class="hotspot map-btn" onclick="show('map')"></button>
-<button class="hotspot scan-btn" onclick="show('scan')"></button>
+<section class="screen phone" id="disease">
+<img src="assets/disease-result.png" alt="Analysis result">
+<button class="action disease-combined visible-action" onclick="show('combined')">View Combined Risk →<span class="hint">Open combined risk</span></button>
 </section>
 
-<section class="screen" id="risk">
+<section class="screen phone" id="risk">
 <img src="assets/risk-prediction.png" alt="Early risk prediction">
-<button class="hotspot map-btn" onclick="show('map')"></button>
-<button class="hotspot scan-btn" onclick="show('scan')"></button>
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
+<button class="action nav-map" onclick="show('map')" aria-label="Open risk map"><span class="hint">Open risk map</span></button>
+<button class="action nav-scan" onclick="show('scan')" aria-label="Open scan"><span class="hint">Open crop scan</span></button>
+<button class="action nav-home" onclick="show('dashboard')" aria-label="Home"><span class="hint">Home</span></button>
 </section>
 
-<section class="screen" id="combined">
-<img src="assets/combined-risk.png" alt="AgriSentry combined risk assessment">
-<button class="hotspot view-map" aria-label="View risk map" onclick="show('map')"></button>
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
-<button class="hotspot map-btn" onclick="show('map')"></button>
+<section class="screen phone" id="combined">
+<img src="assets/combined-risk.png" alt="Combined risk assessment">
+<button class="action combined-map visible-action" onclick="show('map')">🗺️ View Risk Map<span class="hint">Open crop risk map</span></button>
 </section>
 
-<section class="screen" id="map">
+<section class="screen phone" id="map">
 <img src="assets/risk-map.png" alt="Crop risk map">
-<button class="hotspot map-details" aria-label="View field details" onclick="show('officer')"></button>
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
-<button class="hotspot scan-btn" onclick="show('scan')"></button>
+<button class="action risk-map-details" onclick="show('officer')" aria-label="View field details"><span class="hint">View Field 001 details</span></button>
+<button class="action nav-home" onclick="show('dashboard')" aria-label="Home"><span class="hint">Home</span></button>
+<button class="action nav-scan" onclick="show('scan')" aria-label="Scan"><span class="hint">Scan</span></button>
 </section>
 
 <section class="screen officer" id="officer">
 <img src="assets/officer-assessment.png" alt="Agriculture officer field risk assessment">
-<button class="hotspot officer-alert" aria-label="Send Farmer Alert" onclick="show('send-sms')"></button>
+<button class="action officer-send visible-action" onclick="show('send-sms')">✈ Send Farmer Alert<span class="hint">Send farmer SMS alert</span></button>
 </section>
 
-<section class="screen" id="send-sms">
+<section class="screen phone" id="send-sms">
 <img src="assets/send-sms.png" alt="Send SMS Alert">
-<button class="hotspot send-confirm" aria-label="Send SMS" onclick="show('sms-sent')"></button>
+<button class="action sms-send visible-action" onclick="show('sms-sent')">✈ Send<span class="hint">Confirm and send SMS</span></button>
 </section>
 
-<section class="screen" id="sms-sent">
-<img src="assets/sms-sent.png" alt="SMS Alert Sent">
-<button class="hotspot alert-ok" aria-label="OK" onclick="show('map')"></button>
+<section class="screen phone" id="sms-sent">
+<img src="assets/sms-sent.png" alt="SMS alert sent">
+<button class="action sms-ok visible-action" onclick="show('map')">OK<span class="hint">Return to risk map</span></button>
 </section>
 
-<section class="screen" id="alert-details">
+<section class="screen phone" id="alert-details">
 <img src="assets/alert-details.png" alt="Alert details">
-<button class="hotspot send-alert" aria-label="Send SMS Alert" onclick="show('send-sms')"></button>
+<button class="action alert-send" onclick="show('send-sms')" aria-label="Send SMS alert"><span class="hint">Send SMS Alert</span></button>
 </section>
 
-<section class="screen" id="alerts">
+<section class="screen phone" id="alerts">
 <img src="assets/alerts.png" alt="Alerts">
-<button class="hotspot home-btn" onclick="show('dashboard')"></button>
-<button class="hotspot map-btn" onclick="show('map')"></button>
+<button class="action nav-home" onclick="show('dashboard')" aria-label="Home"><span class="hint">Home</span></button>
+<button class="action nav-map" onclick="show('map')" aria-label="Map"><span class="hint">Map</span></button>
 </section>
 
 </div></main>
 
-<div class="legend"><button onclick="show('welcome')">↩ Restart demo</button></div>
+<button class="restart" onclick="show('welcome')">↩ Restart demo</button>
 
 <script>
 const ids=['welcome','dashboard','scan','disease','risk','combined','map','officer','send-sms','sms-sent','alert-details','alerts'];
 function show(id){
-  ids.forEach(x=>{const e=document.getElementById(x);if(e)e.classList.remove('active')});
-  const target=document.getElementById(id);
-  if(!target)return;
-  target.classList.add('active');
-  window.scrollTo(0,0);
+  ids.forEach(x=>document.getElementById(x).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
   history.replaceState(null,'','#'+id);
 }
 const initial=location.hash.slice(1);
-if(ids.includes(initial))show(initial);
+if(ids.includes(initial)) show(initial);
 </script>
 </body>
 </html>
